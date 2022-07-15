@@ -142,6 +142,10 @@
         </div>
         <div class="row justify-content-center mb-3">
           <div class="col-md-6">
+            <div class="alert alert-success alert-dismissible fade show d-none my-alert" role="alert">
+              <strong>Hello!</strong> Your message arrived.
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
             <form name="webportofoliocontact">
               <div class="mb-3">
                 <label for="name" class="form-label">Full Name</label>
@@ -155,7 +159,12 @@
                 <label for="message" class="form-label">Message</label>
                 <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" name="pesan"></textarea>
               </div>
-              <button type="submit" class="btn btn-success">Send</button>
+              <button type="submit" class="btn btn-success btn-kirim">Send</button>
+
+              <button class="btn btn-secondary btn-loading d-none" type="button" disabled>
+                <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+                Loading...
+              </button>
             </form>
           </div>
         </div>
@@ -186,11 +195,33 @@
     <script>
       const scriptURL = "https://script.google.com/macros/s/AKfycbxpSHgWRqf2hd4ysaSKJFRZNoKFwI_8OPI3Mb_X2IIX9ek_9uE2dz5YfRFWqMhFV-cW/exec";
       const form = document.forms["webportofoliocontact"];
+      const btnKirim = document.querySelector(".btn-kirim");
+      const btnLoading = document.querySelector(".btn-loading");
+      const myAlert = document.querySelector(".my-alert");
 
       form.addEventListener("submit", (e) => {
         e.preventDefault();
+
+        // when sending - view load-box
+
+        btnLoading.classList.toggle("d-none");
+        // when sending - hidden send-box
+        btnKirim.classList.toggle("d-none");
+
         fetch(scriptURL, { method: "POST", body: new FormData(form) })
-          .then((response) => console.log("Success!", response))
+          .then((response) => {
+            // view send-box
+            // hidden load-box
+            btnLoading.classList.toggle("d-none");
+            btnKirim.classList.toggle("d-none");
+
+            // view alert
+            myAlert.classList.toggle("d-none");
+
+            // reset form
+            form.reset();
+            console.log("Success!", response);
+          })
           .catch((error) => console.error("Error!", error.message));
       });
     </script>
